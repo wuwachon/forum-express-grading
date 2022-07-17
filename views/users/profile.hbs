@@ -1,14 +1,20 @@
 <div class="row mb-5">
   <div class="card mb-3 col-md-12">
     <div class="row g-0">
-      <div class="col-md-3">
-        <img src="{{user.image}}" class="img-fluid rounded-circle" alt="..." style="width: 300px; height:300px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+      <div class="col-md-4">
+        <img src="{{user.image}}" class="img-fluid" alt="..." style="width: 300px; height:300px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
       </div>
-      <div class="col-md-9">
+      <div class="col-md-8">
         <div class="card-body">
-          <h5 class="card-title">{{user.name}}</h5>
+          <h5 class="card-title fw-bold">{{user.name}}</h5>
           <p class="card-text">{{user.email}}</p>
-          <p class="card-text">{{count}} 已評價餐廳</p>
+          <p class="card-text fw-bold">
+            {{commentsCount}} 已評價餐廳<br>
+            {{favoritedRestaurantsCount}} 收藏的餐廳<br>
+            {{likedRestaurantsCount}} 喜歡的餐廳<br>
+            {{followingsCount}} following (追蹤者)<br>
+            {{followersCount}} follower (追隨者)
+          </p>
           {{#ifCond login_user.id user.id}}
           <a href="/users/{{user.id}}/edit" class="btn btn-primary">Edit</a>
           {{/ifCond}}
@@ -17,17 +23,79 @@
     </div>
   </div>
 </div>
-<div class="card text-center mb-3 col-md-12">
-  <div class="card-header">
-    {{count}} 已評價餐廳
+<div class="row">
+  <div class="col-md-4">
+    <div class="card text-center mb-3 col-md-12">
+      <div class="card-header">
+        {{followingsCount}} following (追蹤者)
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-horizontal d-flex flex-wrap">
+          {{#each user.Followings}}
+            <li class="list-group-item m-1"><a href="/users/{{this.id}}">
+              <img src="{{this.image}}" style="width: 85px; height: 85px;" alt="愛吃鬼">
+            </a></li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+    <div class="card text-center mb-3 col-md-12">
+      <div class="card-header">
+        {{followersCount}} follower (追隨者)
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-horizontal d-flex flex-wrap">
+          {{#each user.Followers}}
+            <li class="list-group-item m-1"><a href="/users/{{this.id}}">
+              <img src="{{this.image}}" style="width: 85px; height: 85px;" alt="愛慕者">
+            </a></li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
   </div>
-  <div class="card-body">
-    <ul class="list-group list-group-horizontal d-flex flex-wrap">
-      {{#each comments}}
-        <li class="list-group-item m-2"><a href="/restaurants/{{this.restaurantId}}">
-          <img src="{{this.Restaurant.image}}" style="width: 150px;" alt="">
-        </a></li>
-      {{/each}}
-    </ul>
+  <div class="col-md-8">
+    <div class="card text-center mb-3 col-md-12">
+      <div class="card-header">
+        {{commentsCount}} 已評價餐廳
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-horizontal d-flex flex-wrap">
+          {{#each commentRestaurants}}
+            <li class="list-group-item m-1"><a href="/restaurants/{{this.id}}">
+              <img src="{{this.image}}" style="width: 90px; height: 65px;" alt="{{this.Restaurant.name}}">
+            </a></li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+    <div class="card text-center mb-3 col-md-12">
+      <div class="card-header">
+        {{favoritedRestaurantsCount}} 收藏的餐廳
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-horizontal d-flex flex-wrap">
+          {{#each user.FavoritedRestaurants}}
+            <li class="list-group-item m-1"><a href="/restaurants/{{this.id}}">
+              <img src="{{this.image}}" style="width: 90px; height: 65px;" alt="{{this.name}}">
+            </a></li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+    <div class="card text-center mb-3 col-md-12">
+      <div class="card-header">
+        {{likedRestaurantsCount}} 喜歡的餐廳
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-horizontal d-flex flex-wrap">
+          {{#each user.LikedRestaurants}}
+            <li class="list-group-item m-1"><a href="/restaurants/{{this.id}}">
+              <img src="{{this.image}}" style="width: 90px; height: 65px;" alt="{{this.name}}">
+            </a></li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
   </div>
 </div>

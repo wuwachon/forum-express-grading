@@ -42,15 +42,31 @@ const userController = {
   },
   getUser: async (req, res, next) => {
     try {
-      const user = await User.findByPk(req.params.id, { raw: true })
-      if (!user) throw new Error("User didn't exist!")
-      const comments = await Comment.findAndCountAll({
-        raw: true,
-        nest: true,
-        include: Restaurant,
-        where: { userId: req.params.id }
+      const user = await User.findByPk(req.params.id, {
+        include: [
+          { model: Restaurant, as: 'FavoritedRestaurants' },
+          { model: Restaurant, as: 'LikedRestaurants' },
+          { model: User, as: 'Followers' },
+          { model: User, as: 'Followings' },
+          { model: Comment, include: Restaurant }
+        ]
       })
-      res.render('users/profile', { user, comments: comments.rows, count: comments.count })
+      if (!user) throw new Error("User didn't exist!")
+      const commentRestaurantsId = [...new Set(user.Comments.map(c => c.Restaurant.id))]
+      const commentRestaurants = await Restaurant.findAll({
+        where: { id: commentRestaurantsId },
+        raw: true
+      })
+      const datas = {
+        user: user.toJSON(),
+        commentRestaurants,
+        favoritedRestaurantsCount: user.FavoritedRestaurants.length,
+        likedRestaurantsCount: user.LikedRestaurants.length,
+        followersCount: user.Followers.length,
+        followingsCount: user.Followings.length,
+        commentsCount: user.Comments.length
+      }
+      res.render('users/profile', datas)
     } catch (err) {
       next(err)
     }
