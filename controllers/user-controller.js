@@ -64,7 +64,7 @@ const userController = {
         likedRestaurantsCount: user.LikedRestaurants.length,
         followersCount: user.Followers.length,
         followingsCount: user.Followings.length,
-        commentsCount: user.Comments.length
+        commentsCount: commentRestaurants.length
       }
       res.render('users/profile', datas)
     } catch (err) {
